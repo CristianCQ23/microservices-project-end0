@@ -15,7 +15,7 @@ El razonamiento completo está en [`docs/00-modelo-de-organizacion.md`](./docs/0
 | [`gateway`](./gateway) | 8000 | — | ⬜ pendiente |
 | [`customers`](./customers) | 8001 | `customers-db` | ✅ migrado |
 | [`products`](./products) | 8002 | `products-db` | ✅ migrado |
-| [`shopping`](./shopping) | 8003 | `shopping-db` | ⬜ pendiente |
+| [`shopping`](./shopping) | 8003 | `shopping-db` | ✅ migrado |
 
 ## Levantar un servicio solo
 

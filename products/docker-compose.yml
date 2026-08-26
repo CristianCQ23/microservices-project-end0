@@ -17,7 +17,7 @@ services:
     container_name: c-products-db
     image: mongo:7
     ports:
-      - "27017:27017"
+      - "27020:27017"
     volumes:
       - products-data:/data/db
 
