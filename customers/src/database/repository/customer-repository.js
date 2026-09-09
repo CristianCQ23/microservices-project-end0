@@ -42,10 +42,19 @@ class CustomerRepository {
 
     async AddToWishlist(customerId, product) {
         const customer = await CustomerModel.findById(customerId);
-        const productId = product._id.toString();
+        if (!customer) {
+            throw new BadRequestError('Customer not found');
+        }
+
+        if (!product || !product._id) {
+            throw new BadRequestError('A product is required');
+        }
+
+        const productData = typeof product.toObject === 'function' ? product.toObject() : product;
+        const productId = productData._id.toString();
 
         if (!customer.wishlist.some((item) => item._id === productId)) {
-            customer.wishlist.push({ ...product.toObject(), _id: productId });
+            customer.wishlist.push({ ...productData, _id: productId });
             await customer.save();
         }
 
@@ -54,6 +63,10 @@ class CustomerRepository {
 
     async RemoveFromWishlist(customerId, productId) {
         const customer = await CustomerModel.findById(customerId);
+        if (!customer) {
+            throw new BadRequestError('Customer not found');
+        }
+
         customer.wishlist = customer.wishlist.filter((item) => item._id !== productId);
         await customer.save();
 
@@ -62,13 +75,22 @@ class CustomerRepository {
 
     async AddToCart(customerId, product, qty) {
         const customer = await CustomerModel.findById(customerId);
-        const productId = product._id.toString();
+        if (!customer) {
+            throw new BadRequestError('Customer not found');
+        }
+
+        if (!product || !product._id || !Number.isInteger(qty) || qty < 1) {
+            throw new BadRequestError('A product and a positive integer quantity are required');
+        }
+
+        const productData = typeof product.toObject === 'function' ? product.toObject() : product;
+        const productId = productData._id.toString();
         const existingItem = customer.cart.find((item) => item.product._id === productId);
 
         if (existingItem) {
             existingItem.unit = qty;
         } else {
-            customer.cart.push({ product: { ...product.toObject(), _id: productId }, unit: qty });
+            customer.cart.push({ product: { ...productData, _id: productId }, unit: qty });
         }
 
         await customer.save();
@@ -77,6 +99,10 @@ class CustomerRepository {
 
     async RemoveFromCart(customerId, productId) {
         const customer = await CustomerModel.findById(customerId);
+        if (!customer) {
+            throw new BadRequestError('Customer not found');
+        }
+
         customer.cart = customer.cart.filter((item) => item.product._id !== productId);
         await customer.save();
 

@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "seed": "node src/database/seed/run-seed.js"
+    "seed": "node src/database/seed/run-seed.js",
+    "test": "jest --runInBand"
   },
   "keywords": [],
   "type": "commonjs",
@@ -13,5 +14,10 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mongoose": "^9.9.3"
+  },
+  "devDependencies": {
+    "jest": "^30.5.1",
+    "mongodb-memory-server": "^10.4.3",
+    "supertest": "^7.2.2"
   }
 }

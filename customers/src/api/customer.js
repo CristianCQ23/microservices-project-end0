@@ -60,8 +60,49 @@ router.get('/wishlist', UserAuth, async (req, res, next) => {
 router.put('/wishlist', UserAuth, async (req, res, next) => {
     try {
         const { _id } = req.user;
-        const { product_id } = req.body;
-        const { data } = await service.AddToWishlist(_id, product_id);
+        const product = req.body.product || req.body.product_id || req.body.productId;
+        const { data } = await service.AddToWishlist(_id, product);
+        return res.json(data);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/wishlist/:productId', UserAuth, async (req, res, next) => {
+    try {
+        const { data } = await service.RemoveFromWishlist(
+            req.user._id,
+            req.params.productId
+        );
+        return res.json(data);
+    } catch (err) {
+        next(err);
+    }
+});
+
+// Carrito
+router.get('/cart', UserAuth, async (req, res, next) => {
+    try {
+        const { data } = await service.GetCart(req.user._id);
+        return res.json(data);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.put('/cart', UserAuth, async (req, res, next) => {
+    try {
+        const { product, qty } = req.body;
+        const { data } = await service.AddToCart(req.user._id, product, qty);
+        return res.json(data);
+    } catch (err) {
+        next(err);
+    }
+});
+
+router.delete('/cart/:productId', UserAuth, async (req, res, next) => {
+    try {
+        const { data } = await service.RemoveFromCart(req.user._id, req.params.productId);
         return res.json(data);
     } catch (err) {
         next(err);
@@ -69,7 +110,7 @@ router.put('/wishlist', UserAuth, async (req, res, next) => {
 });
 
 // Órdenes
-router.get('/order/:id', async (req, res, next) => {
+ router.get('/order/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         const { data } = await service.GetOrders(id);

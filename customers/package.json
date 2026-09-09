@@ -3,17 +3,24 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "test": "node ./node_modules/jest/bin/jest.js --runInBand"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.24.3"
   },
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "jest": "^30.5.1",
+    "mongodb-memory-server": "^10.4.3",
+    "supertest": "^7.2.2"
+  }
 }

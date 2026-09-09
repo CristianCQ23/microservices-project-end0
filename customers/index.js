@@ -7,7 +7,7 @@ const expressApp = require('./src/express-app');
 
 
 const StartServer = async () => {
-    requireVars('DB_URL');
+    requireVars('DB_URL', 'APP_SECRET');
     const app = express();
     
     await databaseConnection();

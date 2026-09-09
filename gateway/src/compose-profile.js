@@ -1,4 +1,4 @@
-const { CUSTOMERS_URL, SHOPPING_URL } = require('./config');
+const { CUSTOMERS_URL } = require('./config');
 const { APIError } = require('./utils/app-errors');
 const TIMEOUT_MS = 5000;
 
@@ -8,40 +8,13 @@ const fetchJson = (url, authorization) =>
     signal: AbortSignal.timeout(TIMEOUT_MS)
   });
 
-const EMPTY_SHOPPING = { cart: [], wishlist: [], orders: [] };
-
-const fetchShopping = async (authorization) => {
-  try {
-    const res = await fetchJson(
-      `${SHOPPING_URL}/customer/shopping-details`,
-      authorization
-    );
-
-    if (!res.ok) {
-      console.error(
-        `shopping responded HTTP ${res.status} composing profile`
-      );
-      return EMPTY_SHOPPING;
-    }
-
-    return await res.json();
-  } catch (err) {
-    console.error(
-      `shopping unreachable composing profile: ${err.message}`
-    );
-    return EMPTY_SHOPPING;
-  }
-};
-
 module.exports = async (req, res, next) => {
   const authorization = req.headers.authorization;
 
-  const [profileResult, shopping] = await Promise.all([
-    fetchJson(`${CUSTOMERS_URL}/customer/profile`, authorization).catch(
-      (err) => err
-    ),
-    fetchShopping(authorization)
-  ]);
+  const profileResult = await fetchJson(
+    `${CUSTOMERS_URL}/customers/profile`,
+    authorization
+  ).catch((err) => err);
 
   if (profileResult instanceof Error) {
     return next(
@@ -64,4 +37,7 @@ module.exports = async (req, res, next) => {
       )
     );
   }
+
+  const body = await profileResult.json();
+  return res.json(body.data || body);
 };
